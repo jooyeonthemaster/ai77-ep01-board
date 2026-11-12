@@ -1,0 +1,71 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>-77% 1화 콘티 보드</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&display=swap">
+<style>
+:root { --bg:#0b0a09; --panel:#151210; --line:#2b241d; --ink:#efe7d8; --dim:#968b7c; --gold:#d6b46a; --red:#e2483c; --blue:#4a8cff; --yel:#ffd400; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font-family:Pretendard,"Malgun Gothic",sans-serif; }
+header { position:sticky; top:0; z-index:5; background:linear-gradient(#0b0a09 85%, #0b0a0900); padding:18px 24px 10px; }
+h1 { font-family:"Noto Serif KR",serif; font-weight:900; font-size:28px; margin:0; letter-spacing:.02em; }
+h1 b { color:var(--gold); }
+.meta { color:var(--dim); font-size:13px; margin-top:4px; }
+.bar { display:flex; height:30px; margin-top:12px; border:1px solid var(--line); border-radius:4px; overflow:hidden; }
+.bar a { display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#120e0a; text-decoration:none; white-space:nowrap; overflow:hidden; border-right:1px solid #0b0a09; }
+.tools { margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; }
+.tools button { background:var(--panel); color:var(--ink); border:1px solid var(--line); border-radius:4px; padding:6px 10px; font:600 12px Pretendard,sans-serif; cursor:pointer; }
+.tools button.on { border-color:var(--gold); color:var(--gold); }
+section.part { padding:10px 24px 30px; }
+.ph { display:flex; align-items:baseline; gap:12px; border-bottom:1px solid var(--line); padding:18px 0 8px; }
+.ph .pid { font-family:"Noto Serif KR",serif; font-weight:900; font-size:30px; color:var(--gold); }
+.ph .pn { font-size:20px; font-weight:800; }
+.ph .pt { color:var(--dim); font-size:13px; margin-left:auto; }
+.note { color:#cbbfa9; font-size:13.5px; line-height:1.6; margin:10px 0 16px; border-left:3px solid var(--gold); padding-left:10px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(380px, 1fr)); gap:16px; }
+.card { background:var(--panel); border:1px solid var(--line); border-radius:6px; overflow:hidden; display:flex; flex-direction:column; }
+.card img { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; background:#000; cursor:zoom-in; }
+.noimg .card img { display:none; }
+.top { display:flex; gap:8px; align-items:center; padding:9px 12px 0; font-size:12px; color:var(--dim); }
+.top .id { font-weight:800; color:var(--ink); font-size:14px; }
+.k { padding:2px 7px; border-radius:3px; font-weight:700; font-size:11px; color:#100c08; }
+.body { padding:6px 12px 12px; font-size:13.5px; line-height:1.55; }
+.pic { color:#cfc5b6; margin-bottom:6px; }
+.say { margin:3px 0; }
+.say.me::before { content:"나 "; color:var(--gold); font-weight:800; }
+.say.nar { color:#e6d7ff; } .say.nar::before { content:"내레이션 "; color:#b79cff; font-weight:800; }
+.say.vo { color:#bfe3ff; } .say.vo::before { content:"목소리 "; color:#6fc0ff; font-weight:800; }
+.txt { display:inline-block; margin-top:6px; background:#000; color:var(--yel); font-weight:800; padding:3px 8px; border-radius:3px; border:1px solid #3d3415; }
+.sfx, .shoot { font-size:12.5px; color:var(--dim); margin-top:5px; }
+.sfx::before { content:"♪ "; color:var(--red); } .shoot::before { content:"촬영 · "; color:#7fd18b; font-weight:700; }
+#zoom { position:fixed; inset:0; background:#000d; display:none; align-items:center; justify-content:center; z-index:9; cursor:zoom-out; }
+#zoom img { max-width:96vw; max-height:92vh; }
+@media (max-width:600px) { .grid { grid-template-columns:1fr; } header, section.part { padding-left:12px; padding-right:12px; } }
+</style></head><body>
+<header><h1><b>-77%</b> 도파민 이대남의 30일 복구 일지 · 1화 — 대본·콘티</h1>
+<div class="meta" id="meta"></div><div class="bar" id="bar"></div>
+<div class="tools"><button id="tImg" class="on">그림 보기</button><button id="tShoot" class="on">촬영 메모</button></div></header>
+<main id="main"></main><div id="zoom"><img alt=""></div>
+<script src="board/data.js"></script>
+<script>
+const KC = { A:'#d6b46a', N:'#e2483c', G:'#f2efe6', S:'#6fc0ff', B:'#9be39b', M:'#ff9ad5', D:'#b79cff' };
+const PC = ['#e2483c','#d6b46a','#f2c14e','#9be39b','#6fc0ff','#b79cff','#ff9ad5','#f2efe6','#c9a0ff','#ffd400'];
+const mmss = (x) => `${Math.floor(x / 60)}:${String(Math.floor(x % 60)).padStart(2, '0')}`;
+const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[c]));
+const V = Date.now();
+document.getElementById('meta').textContent = `예상 ${mmss(DATA.total)} (말 속도 계산 · 실제 촬영은 쉼·리액션으로 +15~20%) · 컷 ${DATA.shots.length} · 파트 ${DATA.parts.length} · 레퍼런스: 「작전」「돈」「월가의 늑대」 예고편 + 쇼츠 "30일 안에 1조"`;
+document.getElementById('bar').innerHTML = DATA.parts.map((p, i) => `<a href="#${p.id}" style="flex:${p.d};background:${PC[i % PC.length]}" title="${esc(p.name)} ${mmss(p.d)}">${p.id}</a>`).join('');
+document.getElementById('main').innerHTML = DATA.parts.map((p) => {
+  const cards = DATA.shots.filter((s) => s.part === p.id).map((s) => {
+    const says = s.say.map((l) => l.startsWith('N:') ? `<div class="say nar">${esc(l.slice(2))}</div>` : l.startsWith('V:') ? `<div class="say vo">${esc(l.slice(2))}</div>` : `<div class="say me">${esc(l)}</div>`).join('');
+    return `<div class="card">${s.img ? `<img loading="lazy" src="../img/${s.img}.png?v=${V}" alt="${s.id}">` : ''}
+      <div class="top"><span class="id">${s.id}</span><span>${mmss(s.t0)}</span><span>${s.d}초</span><span class="k" style="background:${KC[s.kind]}">${esc(DATA.kind[s.kind])}</span></div>
+      <div class="body"><div class="pic">${esc(s.pic)}</div>${says}${s.text ? `<div class="txt">${esc(s.text)}</div>` : ''}${s.sfx ? `<div class="sfx">${esc(s.sfx)}</div>` : ''}${s.shoot ? `<div class="shoot">${esc(s.shoot)}</div>` : ''}</div></div>`;
+  }).join('');
+  return `<section class="part" id="${p.id}"><div class="ph"><span class="pid">${p.id}</span><span class="pn">${esc(p.name)}</span><span class="pt">${mmss(p.t0)} ~ · ${mmss(p.d)}</span></div><div class="note">${esc(p.note)}</div><div class="grid">${cards}</div></section>`;
+}).join('');
+const tg = (id, cls) => document.getElementById(id).onclick = (e) => { e.target.classList.toggle('on'); document.body.classList.toggle(cls); };
+tg('tImg', 'noimg');
+document.getElementById('tShoot').onclick = (e) => { e.target.classList.toggle('on'); document.querySelectorAll('.shoot').forEach((x) => x.style.display = e.target.classList.contains('on') ? '' : 'none'); };
+const z = document.getElementById('zoom');
+document.addEventListener('click', (e) => { if (e.target.tagName === 'IMG' && e.target.closest('.card')) { z.querySelector('img').src = e.target.src; z.style.display = 'flex'; } else if (e.target.closest('#zoom')) z.style.display = 'none'; });
+</script></body></html>
